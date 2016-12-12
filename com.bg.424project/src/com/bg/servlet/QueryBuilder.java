@@ -23,16 +23,64 @@ public class QueryBuilder extends HttpServlet {
 	protected void doGet(HttpServletRequest request,
 	                HttpServletResponse response) throws ServletException, IOException {
 		
-		response.setContentType("text/plain");
+		String queryName = request.getParameter("queryName");
+		String extra = request.getParameter("extra");
+		
+		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
 		
 		//Print results of query
 		try {
-			String quer = db.findCand();
-			out.println(quer);
+			String quer = "";
+			
+			if(queryName.equals("candidate")){
+				quer = db.candQuery(extra);
+			}
+			
+			else if(queryName.equals("electionYear")){
+				quer = db.electionYearQuery(extra);
+			}
+			
+			else if(queryName.equals("reelection")){
+				quer = db.reelectionQuery();
+			}
+			
+			else if(queryName.equals("swingCandidate")){
+				quer = db.swingCandQuery();
+			}
+			
+			else if(queryName.equals("party")){
+				quer = db.partyQuery(extra);
+			}
+			
+			else if(queryName.equals("pollAccuracy")){
+				quer = db.pollAccuracy(extra);
+			}
+			
+			else if(queryName.equals("swingState")){
+				quer = db.swingStateQuery(extra);
+			}
+			
+			else if(queryName.equals("electoralVote")){
+				quer = db.electoralVotesQuery(extra);
+			}
+			
+			else if(queryName.equals("popularVote")){
+				quer = db.popularVoteQuery();
+			}
+
+			out.println("<div>" + quer + "</div>");
+			
+			//Return to Welcome Page Link
+			out.println("<br><br><a href=\"WelcomePage.jsp\">Back to Query Select</a>");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		doGet(request, response);
 	}
 	
 	
